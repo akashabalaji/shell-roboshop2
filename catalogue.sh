@@ -1,14 +1,12 @@
 #!/bin/bash
-source ./commoon.sh
+
+source ./common.sh
 app_name=catalogue
 
 check_root
 app_setup
 nodejs_setup
 systemd_setup
-
-npm install &>>$LOG_FILE
-VALIDATE $? "Installing Dependencies"
 
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo 
 dnf install mongodb-mongosh -y &>>$LOG_FILE
@@ -22,4 +20,6 @@ then
 else
     echo -e "Data is already loaded ... $Y SKIPPING $N"
 fi
-print_time      
+
+print_time
+
