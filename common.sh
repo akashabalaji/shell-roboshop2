@@ -11,7 +11,8 @@ N="\e[0m"
 LOGS_FOLDER="/var/logs/roboshop-logs"
 SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
-
+SCRIPT_DIR=$PWD
+ 
 mkdir -p $LOGS_FOLDER
 echo "script started executing at: $(date)" | tee -a $LOG_FILE
 
@@ -46,8 +47,31 @@ nodejs_setup(){
 
     dnf install nodejs -y &>>$LOG_FILE
     VALIDATE $? "Installing nodejs:20"
+
+    npm install &>>$LOG_FILE
+    VALIDATE $? "Installing Dependencies"
 }
-systemd_steup(){
+
+maven_setup(){
+    dnf install maven -y &>>$LOG_FILE
+    VALIDATE $? "Installing Maven and Java"
+
+    mvn clean package  &>>$LOG_FILE
+    VALIDATE $? "Packaging the shipping application"
+
+    mv target/shipping-1.0.jar shipping.jar  &>>$LOG_FILE
+    VALIDATE $? "Moving and renaming Jar file"
+}
+
+python_setup(){
+    dnf install python3 gcc python3-devel -y &>>$LOG_FILE
+    VALIDATE $? "Installing Python3 and dependencies"
+    
+    pip3 install -r requirements.txt &>>$LOG_FILE
+    VALIDATE $? "Installing Python dependencies"
+}
+
+systemd_setup(){
     cp $SCRIPT_DIR/$app_name.service /etc/systemd/system/$app_name.service
     VALIDATE $? "Copying $app_name service"
 
