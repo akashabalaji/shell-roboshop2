@@ -1,5 +1,5 @@
 #!/bin/bash
-source ./commmon.sh
+source ./common.sh
 app_name=payment
 
 check_root
