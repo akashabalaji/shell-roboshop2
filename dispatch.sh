@@ -66,3 +66,5 @@ go build &>>$LOG_FILE
 VALIDATE $? "Building go application"
 
 cp $SCRIPT_DIR/dispatch.service /etc/systemd/system/dispatch.service
+
+print_time
