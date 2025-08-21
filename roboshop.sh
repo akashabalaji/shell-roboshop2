@@ -2,15 +2,15 @@
 # This script creates EC2 instances for a Roboshop application and updates Route 53 DNS records.
 
 AMI_ID="ami-09c813fb71547fc4f"
-SG_ID="sg-0afb0733333250162" # replace with your SG ID
+SG_ID="sg-0a128eddba8d071da" # replace with your SG ID
 INSTANCES=("mongodb" "redis" "mysql" "rabbitmq" "catalogue" "user" "cart" "shipping" "payment" "dispatch" "frontend")
-ZONE_ID="Z08186589VBOFNQARTE2" # replace with your ZONE ID
+ZONE_ID="Z050843024L8KGYDNV9DX" # replace with your ZONE ID
 DOMAIN_NAME="akashabalaji.site" # replace with your domain
 
 #for instance in ${INSTANCES[@]}
 for instance in "$@" # Use command line arguments to specify instances
 do
-    INSTANCE_ID=$(aws ec2 run-instances --image-id ami-09c813fb71547fc4f --instance-type t3.micro --security-group-ids sg-0afb0733333250162 --tag-specifications "ResourceType=instance,Tags=[{Key=Name, Value=$instance}]" --query "Instances[0].InstanceId" --output text) # replace with your AMI ID and SG ID
+    INSTANCE_ID=$(aws ec2 run-instances --image-id ami-09c813fb71547fc4f --instance-type t3.micro --security-group-ids sg-0a128eddba8d071da --tag-specifications "ResourceType=instance,Tags=[{Key=Name, Value=$instance}]" --query "Instances[0].InstanceId" --output text) # replace with your AMI ID and SG ID
     if [ "$instance" != "frontend" ] # If the instance is not frontend, use private IP
     then
         IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query "Reservations[0].Instances[0].PrivateIpAddress" --output text) # Get the private IP address
